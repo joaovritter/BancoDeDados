@@ -1,6 +1,6 @@
-CREATE DATABASE FACULDADE2;
-USE FACULDADE2;
-DROP DATABASE FACULDADE2;
+CREATE DATABASE FACULDADE;
+USE FACULDADE;
+DROP DATABASE FACULDADE;
 
 CREATE TABLE ALUNO (
     Nome NVARCHAR(50),
@@ -151,27 +151,20 @@ FROM ALUNO AS A;
 
 
 --12)
-DECLARE @nome VARCHAR (50),
-		@nota VARCHAR (2);
 
-IF (@nota = 'A')
-	SET @nota = '10';
-
-ELSE IF (@nota = 'B')
-	SET @nota = '8';
-
-ELSE IF (@nota = 'C')
-	SET @nota = '6';
-
-ELSE IF (@nota = 'D')
-	SET @nota = '0';
-
-SELECT DISTINCT @nome = A.Nome, @nota = H.Nota
+SELECT DISTINCT A.Nome,
+				D.Nome_disciplina,
+				CASE H.Nota
+					WHEN 'A' THEN 10
+					WHEN 'B' THEN 9
+					WHEN 'C' THEN 8
+					WHEN 'D' THEN 0
+					ELSE NULL
+				END AS Nota
 FROM ALUNO AS A
 JOIN HISTORICO_ESCOLAR AS H ON A.Numero_aluno = H.Numero_aluno
 JOIN TURMA AS T ON H.Identificacao_turma = T.Identificacao_turma
-JOIN DISCIPLINA AS D ON T.Numero_disciplina = D.Numero_disciplina
-WHERE A.Nome = @nome;
+JOIN DISCIPLINA AS D ON T.Numero_disciplina = D.Numero_disciplina;
 
 
 
@@ -202,21 +195,20 @@ PRINT 'Aluno '+ @nomeA + ' Reprovado na disciplina de '+ @disciplinaA;
 
 
 --14)
-DECLARE @turma VARCHAR (50),
-		@identificacao_turma varchar (50),
+DECLARE @identificacao_turma int,
 		@qtdAlunos INT;
-SET @turma = 85;
-SET @identificacao_turma = '85';
 
-SELECT DISTINCT @qtdAlunos = COUNT (H.Identificacao_turma)
+SET @identificacao_turma = 85;
+
+SELECT DISTINCT @qtdAlunos = COUNT (H.Numero_aluno)
 FROM HISTORICO_ESCOLAR AS H
-WHERE H.Identificacao_turma = 85;
+WHERE H.Identificacao_turma = @identificacao_turma;
 IF (@qtdAlunos >= 5)
-PRINT 'Turma '+ @identificacao_turma+ ' esta completamente lotada, com '+  CAST(@qtdAlunos AS VARCHAR (10)) +' alunos';
+PRINT 'Turma '+ CAST (@identificacao_turma AS VARCHAR (50))+ ' esta completamente lotada, com '+  CAST(@qtdAlunos AS VARCHAR (10)) +' alunos';
 
 ELSE IF (@qtdAlunos = 3 or @qtdAlunos = 4)
-PRINT 'Turma '+ @identificacao_turma+ ' esta quase cheia, com '+  CAST(@qtdAlunos AS VARCHAR (10)) +' alunos';
+PRINT 'Turma '+ CAST (@identificacao_turma AS VARCHAR (50))+ ' esta quase cheia, com '+  CAST(@qtdAlunos AS VARCHAR (10)) +' alunos';
 
 ELSE IF (@qtdAlunos < 3)
-PRINT 'Turma '+ @identificacao_turma+ ' esta com vagas, com '+ CAST(@qtdAlunos AS VARCHAR (10))+' alunos';
+PRINT 'Turma '+ CAST (@identificacao_turma AS VARCHAR (50))+ ' esta com vagas, com '+ CAST(@qtdAlunos AS VARCHAR (10))+' alunos';
 
