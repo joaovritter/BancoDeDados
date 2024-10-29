@@ -1,0 +1,11 @@
+--3 
+BEGIN TRANSACTION atualizacao;
+	ROLLBACK TRANSACTION;
+
+	UPDATE ALUNO
+	SET Curso = 'ENG'
+	WHERE ALUNO.Numero_aluno = 1;
+	
+	COMMIT TRANSACTION;
+
+
